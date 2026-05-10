@@ -22,6 +22,7 @@ services:
     world:
         container_name: ${STACK_NAME}_world
         image: itzg/minecraft-server:latest
+        user: root
         cap_add:
             - SYS_NICE
         environment:
