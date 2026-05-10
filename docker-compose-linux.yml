@@ -42,6 +42,4 @@ networks:
 volumes:
     farah-data:
     world-config:
-        external: true
     world-data:
-        external: true
