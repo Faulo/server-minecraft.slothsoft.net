@@ -26,6 +26,7 @@ services:
             - SYS_NICE
         environment:
             EULA: TRUE
+            MAX_MEMORY: 32G
         volumes:
             - world-config:/data
             - world-data:/world
