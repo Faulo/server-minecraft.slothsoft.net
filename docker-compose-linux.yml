@@ -29,8 +29,7 @@ services:
             EULA: TRUE
             MAX_MEMORY: 32G
         volumes:
-            - world-config:/data
-            - world-data:/world
+            - world:/data
         ports:
             - 25565:25565
         labels:
@@ -43,5 +42,4 @@ networks:
 
 volumes:
     farah-data:
-    world-config:
-    world-data:
+    world:
