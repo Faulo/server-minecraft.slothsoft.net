@@ -27,8 +27,8 @@ services:
         environment:
             EULA: TRUE
         volumes:
-            - world-config:/config
-            - world-data:/data
+            - world-config:/data
+            - world-data:/world
         ports:
             - 25565:25565
         labels:
@@ -42,4 +42,6 @@ networks:
 volumes:
     farah-data:
     world-config:
+        external: true
     world-data:
+        external: true
