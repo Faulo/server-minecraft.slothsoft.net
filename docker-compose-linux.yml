@@ -25,7 +25,7 @@ services:
         cap_add:
             - SYS_NICE
         environment:
-            EULA=TRUE
+            EULA: TRUE
         volumes:
             - world-config:/config
             - world-data:/data
