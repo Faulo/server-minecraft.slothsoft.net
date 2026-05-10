@@ -1,0 +1,6 @@
+/data
+/cache
+/log
+/vendor
+
+/.farah-vendor

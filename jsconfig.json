@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "paths": {
+      "/slothsoft@farah/*": [
+        "./vendor/slothsoft/farah/assets/*"
+      ],
+      "/slothsoft@minecraft.slothsoft.net/*": [
+        "./assets/*"
+      ]
+    }
+  }
+}

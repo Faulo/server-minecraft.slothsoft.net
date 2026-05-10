@@ -1,0 +1,45 @@
+services:
+    frontend:
+        container_name: ${STACK_NAME}_frontend
+        build:
+            dockerfile: Dockerfile.linux
+            args:
+                PHP_VERSION: ${PHP_VERSION}
+        environment:
+            SERVER_NAME: ${SERVER_NAME}
+            VIRTUAL_HOST: ${SERVER_NAME}
+            LETSENCRYPT_HOST: ${SERVER_NAME}
+        volumes:
+            - farah-data:/var/www/data/
+        tmpfs:
+            - /var/www/cache/:uid=33,gid=33
+        networks:
+            - vhosts
+        expose:
+            - 80
+        restart: unless-stopped
+
+    world:
+        container_name: ${STACK_NAME}_world
+        image: itzg/minecraft-server:latest
+        cap_add:
+            - SYS_NICE
+        environment:
+            EULA=TRUE
+        volumes:
+            - world-config:/config
+            - world-data:/data
+        ports:
+            - 25565:25565
+        labels:
+            - "com.centurylinklabs.watchtower.enable=true"
+        restart: unless-stopped
+
+networks:
+    vhosts:
+        external: true
+
+volumes:
+    farah-data:
+    world-config:
+    world-data:

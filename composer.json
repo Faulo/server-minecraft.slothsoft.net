@@ -1,0 +1,42 @@
+{
+	"name" : "slothsoft/minecraft.slothsoft.net",
+	"type" : "project",
+	"description" : "minecraft.slothsoft.net",
+	"license" : "MIT",
+	"keywords" : [
+		"slothsoft",
+		"farah-module",
+		"farah-server"
+	],
+	"autoload" : {
+		"files" : [
+			"src/bootstrap.php"
+		],
+		"psr-4" : {
+			"Slothsoft\\Server\\Valheim\\" : "src"
+		}
+	},
+	"require" : {
+		"slothsoft/core" : "^1.14.19",
+		"slothsoft/farah" : "^1.27.1"
+	},
+	"require-dev" : {
+		"phpunit/phpunit" : "~9.6.23",
+		"slothsoft/farah-testing" : "^1.3.1"
+	},
+	"autoload-dev" : {
+		"psr-4" : {
+			"Slothsoft\\Server\\Valheim\\" : "tests"
+		}
+	},
+	"scripts" : {
+		"farah-asset" : "@php vendor/slothsoft/farah/scripts/farah-asset.php",
+		"farah-page" : "@php vendor/slothsoft/farah/scripts/farah-page.php"
+	},
+	"homepage" : "https://valheim.slothsoft.net",
+	"authors" : [{
+			"name" : "Daniel Schulz",
+			"email" : "info.slothsoft@gmail.com"
+		}
+	]
+}
