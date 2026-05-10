@@ -8,6 +8,6 @@ use Slothsoft\FarahTesting\Module\AbstractModuleTest;
 final class AssetsModuleTest extends AbstractModuleTest {
 
     protected static function getManifestAuthority(): FarahUrlAuthority {
-        return FarahUrlAuthority::createFromVendorAndModule('slothsoft', 'valheim.slothsoft.net');
+        return FarahUrlAuthority::createFromVendorAndModule('slothsoft', 'minecraft.slothsoft.net');
     }
 }

@@ -1,3 +1,1 @@
-# Docker Image: Valheim Server
-
-This image builds a Valheim server.
+# Slothsoft's Minecraft Server
