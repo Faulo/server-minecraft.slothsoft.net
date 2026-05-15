@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectResources">
+    <resource url="http://schema.slothsoft.net/farah/module" location="$PROJECT_DIR$/vendor/slothsoft/farah/assets/schema/module/1.1.xsd" />
+  </component>
+</project>

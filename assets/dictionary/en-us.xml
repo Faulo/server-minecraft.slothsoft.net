@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us">
+	<p key="home/title">Slothsoft's Minecraft Server</p>
+
+	<p key="home/header">
+		<h1>
+			Slothsoft's Minecraft Server
+		</h1>
+	</p>
+
+	<p key="home/main">
+		<p>
+			Welcome! This is the homepage of the Minecraft server of Slothsoft.
+		</p>
+	</p>
+
+	<p key="home/footer">
+		© 2024
+		<a href="mailto:daniel.lio.schulz@gmail.com">Daniel Schulz</a>,
+		<a href="http://slothsoft.net">Slothsoft</a>
+	</p>
+</html>

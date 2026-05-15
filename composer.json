@@ -13,7 +13,7 @@
             "src/bootstrap.php"
         ],
         "psr-4": {
-            "Slothsoft\\Server\\Valheim\\": "src"
+            "Slothsoft\\Server\\Minecraft\\": "src"
         }
     },
     "require": {
@@ -26,14 +26,14 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Slothsoft\\Server\\Valheim\\": "tests"
+            "Slothsoft\\Server\\Minecraft\\": "tests"
         }
     },
     "scripts": {
         "farah-asset": "@php vendor/slothsoft/farah/scripts/farah-asset.php",
         "farah-page": "@php vendor/slothsoft/farah/scripts/farah-page.php"
     },
-    "homepage": "https://valheim.slothsoft.net",
+    "homepage": "https://minecraft.slothsoft.net",
     "authors": [
         {
             "name": "Daniel Schulz",
