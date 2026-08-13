@@ -46,20 +46,21 @@ services:
         command:
             - |
                 set -e
-                curl --fail --location \
+                curl --fail --silent --show-error --location \
                     --output /tmp/Geyser-Standalone.jar \
                     https://download.geysermc.org/v2/projects/geyser/versions/latest/builds/latest/downloads/standalone
                 exec java \
                     -Xms512M \
                     -Xmx1G \
+                    --enable-native-access=ALL-UNNAMED \
                     -DgeyserUdpAddress=0.0.0.0 \
                     -DgeyserUdpPort=19132 \
                     -jar /tmp/Geyser-Standalone.jar \
                     --nogui \
                     --config /data/config.yml \
-                    --remote.address=world \
-                    --remote.port=25565 \
-                    --remote.auth-type=online
+                    --java.address=world \
+                    --java.port=25565 \
+                    --java.auth-type=online
         depends_on:
             - world
         volumes:
