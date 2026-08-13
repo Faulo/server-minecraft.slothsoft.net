@@ -36,6 +36,40 @@ services:
             - "com.centurylinklabs.watchtower.enable=true"
         restart: unless-stopped
 
+    geyser:
+        container_name: ${STACK_NAME}_geyser
+        image: itzg/minecraft-server:latest
+        user: root
+        entrypoint:
+            - /bin/bash
+            - -c
+        command:
+            - |
+                set -e
+                curl --fail --location \
+                    --output /tmp/Geyser-Standalone.jar \
+                    https://download.geysermc.org/v2/projects/geyser/versions/latest/builds/latest/downloads/standalone
+                exec java \
+                    -Xms512M \
+                    -Xmx1G \
+                    -DgeyserUdpAddress=0.0.0.0 \
+                    -DgeyserUdpPort=19132 \
+                    -jar /tmp/Geyser-Standalone.jar \
+                    --nogui \
+                    --config /data/config.yml \
+                    --remote.address=world \
+                    --remote.port=25565 \
+                    --remote.auth-type=online
+        depends_on:
+            - world
+        volumes:
+            - geyser:/data
+        ports:
+            - 19132:19132/udp
+        labels:
+            - "com.centurylinklabs.watchtower.enable=true"
+        restart: unless-stopped
+
 networks:
     vhosts:
         external: true
@@ -43,3 +77,4 @@ networks:
 volumes:
     farah-data:
     world:
+    geyser:
