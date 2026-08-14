@@ -28,7 +28,6 @@ services:
         environment:
             EULA: TRUE
             MAX_MEMORY: 32G
-            ONLINE_MODE: FALSE
         volumes:
             - world:/data
         ports:
@@ -61,7 +60,7 @@ services:
                     --config /data/config.yml \
                     --java.address=world \
                     --java.port=25565 \
-                    --java.auth-type=offline
+                    --java.auth-type=online
         depends_on:
             - world
         volumes:
