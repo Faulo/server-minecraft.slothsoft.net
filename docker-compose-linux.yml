@@ -54,7 +54,7 @@ services:
         image: ghcr.io/bluemap-minecraft/bluemap:latest
         command: -r -u
         volumes:
-            - bluemap-config::/app/config
+            - bluemap-config:/app/config
             - bluemap-data:/app/data
             - bluemap-web:/app/web
             - world:/app/server:ro
