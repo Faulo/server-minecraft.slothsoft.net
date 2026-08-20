@@ -54,10 +54,10 @@ services:
         image: ghcr.io/bluemap-minecraft/bluemap:latest
         command: -r -u
         volumes:
-            - world:/app:ro
             - bluemap-config:/app/config
             - bluemap-data:/app/data
             - bluemap-web:/app/web
+            - world:/app/server:ro
         labels:
             - "com.centurylinklabs.watchtower.enable=true"
         restart: unless-stopped
