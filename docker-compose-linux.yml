@@ -11,6 +11,7 @@ services:
             LETSENCRYPT_HOST: ${SERVER_NAME}
         volumes:
             - farah-data:/var/www/data/
+            - bluemap-web:/var/www/html/WorldMap:ro
         tmpfs:
             - /var/www/cache/:uid=33,gid=33
         networks:
@@ -22,7 +23,6 @@ services:
     world:
         container_name: ${STACK_NAME}_world
         image: itzg/minecraft-server:latest
-        pull_policy: daily
         user: root
         cap_add:
             - SYS_NICE
@@ -48,6 +48,22 @@ services:
         labels:
             - "com.centurylinklabs.watchtower.enable=true"
         restart: unless-stopped
+
+    bluemap:
+        container_name: ${STACK_NAME}_bluemap
+        image: ghcr.io/bluemap-minecraft/bluemap:latest
+        command: -r -u
+        volumes:
+            - bluemap-config::/app/config
+            - bluemap-data:/app/data
+            - bluemap-web:/app/web
+            - world:/app/server:ro
+        labels:
+            - "com.centurylinklabs.watchtower.enable=true"
+        restart: unless-stopped
+        depends_on:
+            world:
+                condition: service_started
 
 configs:
     floodgate:
@@ -81,6 +97,9 @@ networks:
 
 volumes:
     farah-data:
+    bluemap-config:
+    bluemap-data:
+    bluemap-web:
     world:
         external: true
         name: minecraft_world
