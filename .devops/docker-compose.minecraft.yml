@@ -20,19 +20,24 @@ services:
                 https://download.geysermc.org/v2/projects/geyser/versions/latest/builds/latest/downloads/fabric
         volumes:
             - world:/data
-        configs:
-            - source: floodgate
-              target: /config/floodgate/config.yml
+            - floodgate-config:/config/floodgate:ro
         ports:
-            - 25565:25565/tcp
-            - 19132:19132/udp
+            - target: 25565
+              published: 25565
+              protocol: tcp
+              mode: host
+            - target: 19132
+              published: 19132
+              protocol: udp
+              mode: host
         deploy:
           endpoint_mode: dnsrr
           replicas: 1
           placement:
             constraints:
               - node.hostname == groke
-        restart: unless-stopped
+          restart_policy:
+            condition: any
 
     bluemap:
         image: ghcr.io/bluemap-minecraft/bluemap:latest
@@ -48,38 +53,16 @@ services:
           placement:
             constraints:
               - node.hostname == groke
-        restart: unless-stopped
-
-configs:
-    floodgate:
-        content: |
-            key-file-name: key.pem
-            username-prefix: "."
-            replace-spaces: true
-
-            disconnect:
-              invalid-key: Please connect through the official Geyser
-              invalid-arguments-length: Expected {} arguments, got {}. Is Geyser up-to-date?
-
-            player-link:
-              enabled: true
-              require-link: true
-              enable-own-linking: false
-              allowed: true
-              link-code-timeout: 300
-              type: sqlite
-              enable-global-linking: true
-
-            metrics:
-              enabled: false
-              uuid: 00000000-0000-0000-0000-000000000000
-
-            config-version: 3
+          restart_policy:
+            condition: any
 
 volumes:
     bluemap-config:
     bluemap-data:
     bluemap-web:
+    floodgate-config:
+        external: true
+        name: minecraft_floodgate-config
     world:
         external: true
         name: minecraft_world
