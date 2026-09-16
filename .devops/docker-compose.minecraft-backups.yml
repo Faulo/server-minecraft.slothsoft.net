@@ -1,0 +1,89 @@
+services:
+  backup:
+    image: itzg/mc-backup:latest
+    environment:
+      RCON_HOST: world
+      RCON_PASSWORD_FILE: /run/secrets/slothsoft_minecraft_rcon_v1
+
+      BACKUP_METHOD: rsync
+      BACKUP_NAME: slothsoft
+      CRON_SCHEDULE: "0 3 * * *"
+      PRUNE_BACKUPS_DAYS: "0"
+      PRUNE_BACKUPS_COUNT: "10"
+      ENABLE_SAVE_ALL: "true"
+      ENABLE_SYNC: "true"
+
+      EXCLUDES: ""
+
+    volumes:
+      - minecraft_world:/data:ro
+      - minecraft_backups:/backups
+
+    secrets:
+      - slothsoft_minecraft_rcon_v1
+
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.hostname == groke
+      restart_policy:
+        condition: any
+
+  samba:
+    image: ghcr.io/servercontainers/samba:latest
+    entrypoint:
+      - /bin/sh
+      - -ec
+      - |
+        export ACCOUNT_minecraft="$$(cat /run/secrets/slothsoft_minecraft_samba_v1)"
+        exec /container/scripts/entrypoint.sh "$$@"
+      - --
+    command:
+      - runsvdir
+      - -P
+      - /container/config/runit
+    environment:
+      UID_minecraft: "1000"
+      AVAHI_DISABLE: "1"
+      NETBIOS_DISABLE: "1"
+      WSDD2_DISABLE: "1"
+      SAMBA_VOLUME_CONFIG_minecraft_backups: >-
+        [minecraft_backups];
+        path = /shares/minecraft_backups;
+        valid users = minecraft;
+        guest ok = no;
+        read only = no;
+        browseable = yes;
+        force user = root;
+        force group = root;
+        create mask = 0660;
+        directory mask = 0770
+    volumes:
+      - minecraft_backups:/shares/minecraft_backups
+    secrets:
+      - slothsoft_minecraft_samba_v1
+    ports:
+      - target: 445
+        published: 445
+        protocol: tcp
+        mode: host
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.hostname == garl
+      restart_policy:
+        condition: any
+
+secrets:
+  slothsoft_minecraft_rcon_v1:
+    external: true
+  slothsoft_minecraft_samba_v1:
+    external: true
+
+volumes:
+  minecraft_world:
+    external: true
+  minecraft_backups:
+    external: true

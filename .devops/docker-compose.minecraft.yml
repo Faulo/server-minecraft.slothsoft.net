@@ -60,54 +60,6 @@ services:
       restart_policy:
         condition: any
 
-  backup:
-    image: itzg/mc-backup:latest
-    environment:
-      RCON_HOST: world
-      RCON_PASSWORD_FILE: /run/secrets/slothsoft_minecraft_rcon_v1
-
-      BACKUP_METHOD: rclone
-      RCLONE_REMOTE: garl
-      RCLONE_DEST_DIR: minecraft
-      RCLONE_COMPRESS_METHOD: zstd
-
-      BACKUP_NAME: minecraft
-      CRON_SCHEDULE: "0 3 * * *"
-      PRUNE_BACKUPS_DAYS: "14"
-      INITIAL_DELAY: "0"
-
-      EXCLUDES: "*.jar,cache,logs,*.tmp"
-
-    volumes:
-      - world:/data:ro
-      - backup-staging:/backups
-
-    configs:
-      - source: minecraft-rclone-config
-        target: /config/rclone/rclone.conf
-
-    secrets:
-      - slothsoft_minecraft_rcon_v1
-
-    networks:
-      - zerotier
-
-    deploy:
-      replicas: 1
-      placement:
-        constraints:
-          - node.hostname == groke
-      restart_policy:
-        condition: any
-
-configs:
-  minecraft-rclone-config:
-    content: |
-      [garl]
-      type = webdav
-      url = http://webdav:8080
-      vendor = rclone
-
 secrets:
   slothsoft_minecraft_rcon_v1:
     external: true
