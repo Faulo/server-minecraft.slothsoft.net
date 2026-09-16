@@ -1,68 +1,124 @@
 services:
-    frontend:
-        volumes:
-            - bluemap-web:/var/www/html/WorldMap:ro
-    world:
-        image: itzg/minecraft-server:latest
-        user: root
-        cap_add:
-            - SYS_NICE
-        environment:
-            EULA: "TRUE"
-            TYPE: FABRIC
-            ONLINE_MODE: "TRUE"
-            ENFORCE_SECURE_PROFILE: "TRUE"
-            MAX_MEMORY: 32G
-            MODRINTH_PROJECTS: |
-                fabric-api
-                floodgate
-            MODS: |
-                https://download.geysermc.org/v2/projects/geyser/versions/latest/builds/latest/downloads/fabric
-        volumes:
-            - world:/data
-            - floodgate-config:/config/floodgate:ro
-        ports:
-            - target: 25565
-              published: 25565
-              protocol: tcp
-              mode: host
-            - target: 19132
-              published: 19132
-              protocol: udp
-              mode: host
-        deploy:
-          endpoint_mode: dnsrr
-          replicas: 1
-          placement:
-            constraints:
-              - node.hostname == groke
-          restart_policy:
-            condition: any
+  frontend:
+    volumes:
+      - bluemap-web:/var/www/html/WorldMap:ro
 
-    bluemap:
-        image: ghcr.io/bluemap-minecraft/bluemap:latest
-        command: -r -u
-        volumes:
-            - bluemap-config:/app/config
-            - bluemap-data:/app/data
-            - bluemap-web:/app/web
-            - world:/app/server:ro
-        deploy:
-          endpoint_mode: dnsrr
-          replicas: 1
-          placement:
-            constraints:
-              - node.hostname == groke
-          restart_policy:
-            condition: any
+  bluemap:
+    image: ghcr.io/bluemap-minecraft/bluemap:latest
+    command: -r -u
+    volumes:
+      - bluemap-config:/app/config
+      - bluemap-data:/app/data
+      - bluemap-web:/app/web
+      - world:/app/server:ro
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.hostname == groke
+      restart_policy:
+        condition: any
+
+  world:
+    image: itzg/minecraft-server:latest
+    user: root
+    cap_add:
+      - SYS_NICE
+    environment:
+      EULA: "TRUE"
+      VERSION: "26.2"
+      TYPE: FABRIC
+      ONLINE_MODE: "TRUE"
+      ENFORCE_SECURE_PROFILE: "TRUE"
+      MAX_MEMORY: 32G
+      MODRINTH_PROJECTS: |
+        fabric-api
+        floodgate
+      MODS: |
+        https://download.geysermc.org/v2/projects/geyser/versions/latest/builds/latest/downloads/fabric
+      ENABLE_RCON: "TRUE"
+      RCON_PASSWORD_FILE: /run/secrets/slothsoft_minecraft_rcon_v1
+    secrets:
+      - slothsoft_minecraft_rcon_v1
+    volumes:
+      - world:/data
+      - floodgate-config:/config/floodgate:ro
+    ports:
+      - target: 25565
+        published: 25565
+        protocol: tcp
+        mode: host
+      - target: 19132
+        published: 19132
+        protocol: udp
+        mode: host
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.hostname == groke
+      restart_policy:
+        condition: any
+
+  backup:
+    image: itzg/mc-backup:latest
+    environment:
+      RCON_HOST: world
+      RCON_PASSWORD_FILE: /run/secrets/slothsoft_minecraft_rcon_v1
+
+      BACKUP_METHOD: rclone
+      RCLONE_REMOTE: garl
+      RCLONE_DEST_DIR: minecraft
+      RCLONE_COMPRESS_METHOD: zstd
+
+      BACKUP_NAME: minecraft
+      CRON_SCHEDULE: "0 3 * * *"
+      PRUNE_BACKUPS_DAYS: "14"
+      INITIAL_DELAY: "0"
+
+      EXCLUDES: "*.jar,cache,logs,*.tmp"
+
+    volumes:
+      - world:/data:ro
+      - backup-staging:/backups
+
+    configs:
+      - source: minecraft-rclone-config
+        target: /config/rclone/rclone.conf
+
+    secrets:
+      - slothsoft_minecraft_rcon_v1
+
+    networks:
+      - zerotier
+
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.hostname == groke
+      restart_policy:
+        condition: any
+
+configs:
+  minecraft-rclone-config:
+    content: |
+      [garl]
+      type = webdav
+      url = http://webdav:8080
+      vendor = rclone
+
+secrets:
+  slothsoft_minecraft_rcon_v1:
+    external: true
 
 volumes:
-    bluemap-config:
-    bluemap-data:
-    bluemap-web:
-    floodgate-config:
-        external: true
-        name: minecraft_floodgate-config
-    world:
-        external: true
-        name: minecraft_world
+  bluemap-config:
+  bluemap-data:
+  bluemap-web:
+  floodgate-config:
+    external: true
+    name: minecraft_floodgate-config
+  world:
+    external: true
+    name: minecraft_world
