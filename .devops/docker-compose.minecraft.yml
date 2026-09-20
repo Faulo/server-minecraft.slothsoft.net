@@ -26,7 +26,7 @@ services:
       - SYS_NICE
     environment:
       EULA: "TRUE"
-      VERSION: "26.2"
+      VERSION: "26.3"
       TYPE: FABRIC
       ONLINE_MODE: "TRUE"
       ENFORCE_SECURE_PROFILE: "TRUE"
@@ -35,7 +35,7 @@ services:
         fabric-api
         floodgate
       MODS: |
-        https://download.geysermc.org/v2/projects/geyser/versions/latest/builds/latest/downloads/fabric
+        https://download.geysermc.org/v2/projects/geyserpreview/versions/pr.6712/builds/latest/downloads/fabric
       ENABLE_RCON: "TRUE"
       RCON_PASSWORD_FILE: /run/secrets/slothsoft_minecraft_rcon_v1
     secrets:
