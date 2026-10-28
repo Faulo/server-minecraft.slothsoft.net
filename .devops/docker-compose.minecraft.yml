@@ -39,7 +39,7 @@ services:
         -DgeyserUdpPort=19132
         -DgeyserWebrtcPort=19132
         -DgeyserSignalingPort=19132
-        -DgeyserAdvertiseAddresses=${SERVER_NAME}
+        -DgeyserAdvertiseAddresses=${SERVER_NAME}:${BEDROCK_PORT:-19132}
       MODRINTH_PROJECTS: |
         fabric-api
         floodgate
@@ -54,15 +54,15 @@ services:
       - floodgate-config:/config/floodgate:ro
     ports:
       - target: 25565
-        published: 25565
+        published: "${JAVA_PORT:-25565}"
         protocol: tcp
         mode: host
       - target: 19132
-        published: 19132
+        published: "${BEDROCK_PORT:-19132}"
         protocol: tcp
         mode: host
       - target: 19132
-        published: 19132
+        published: "${BEDROCK_PORT:-19132}"
         protocol: udp
         mode: host
     deploy:
@@ -86,4 +86,4 @@ volumes:
     name: minecraft_floodgate-config
   world:
     external: true
-    name: minecraft_world
+    name: ${STACK_NAME}_world
