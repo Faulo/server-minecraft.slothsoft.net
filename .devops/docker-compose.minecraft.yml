@@ -30,12 +30,21 @@ services:
       TYPE: FABRIC
       ONLINE_MODE: "TRUE"
       ENFORCE_SECURE_PROFILE: "TRUE"
+      ALLOW_FLIGHT: "TRUE"
       MAX_MEMORY: 32G
+      JVM_OPTS: >-
+        -DgeyserTransport=nethernet
+        -DgeyserSignalingMode=builtin
+        -DgeyserUdpAddress=0.0.0.0
+        -DgeyserUdpPort=19132
+        -DgeyserWebrtcPort=19132
+        -DgeyserSignalingPort=19132
+        -DgeyserAdvertiseAddresses=${SERVER_NAME}
       MODRINTH_PROJECTS: |
         fabric-api
         floodgate
       MODS: |
-        https://download.geysermc.org/v2/projects/geyserpreview/versions/pr.6712/builds/latest/downloads/fabric
+        https://download.geysermc.org/v2/projects/geyser/versions/latest/builds/latest/downloads/fabric
       ENABLE_RCON: "TRUE"
       RCON_PASSWORD_FILE: /run/secrets/slothsoft_minecraft_rcon_v1
     secrets:
@@ -46,6 +55,10 @@ services:
     ports:
       - target: 25565
         published: 25565
+        protocol: tcp
+        mode: host
+      - target: 19132
+        published: 19132
         protocol: tcp
         mode: host
       - target: 19132
