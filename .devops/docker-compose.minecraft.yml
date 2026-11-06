@@ -1,24 +1,4 @@
 services:
-  frontend:
-    volumes:
-      - bluemap-web:/var/www/html/WorldMap:ro
-
-  bluemap:
-    image: ghcr.io/bluemap-minecraft/bluemap:latest
-    command: -r -u
-    volumes:
-      - bluemap-config:/app/config
-      - bluemap-data:/app/data
-      - bluemap-web:/app/web
-      - world:/app/server:ro
-    deploy:
-      replicas: 1
-      placement:
-        constraints:
-          - node.hostname == groke
-      restart_policy:
-        condition: any
-
   world:
     image: itzg/minecraft-server:latest
     user: root
@@ -78,9 +58,6 @@ secrets:
     external: true
 
 volumes:
-  bluemap-config:
-  bluemap-data:
-  bluemap-web:
   floodgate-config:
     external: true
     name: minecraft_floodgate-config

@@ -1,0 +1,25 @@
+services:
+  frontend:
+    volumes:
+      - bluemap-web:/var/www/html/WorldMap:ro
+
+  bluemap:
+    image: ghcr.io/bluemap-minecraft/bluemap:latest
+    command: -r -u
+    volumes:
+      - bluemap-config:/app/config
+      - bluemap-data:/app/data
+      - bluemap-web:/app/web
+      - world:/app/server:ro
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.hostname == groke
+      restart_policy:
+        condition: any
+
+volumes:
+  bluemap-config:
+  bluemap-data:
+  bluemap-web:
